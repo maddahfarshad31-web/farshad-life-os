@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101010">
+<meta name="description" content="FARSHAD Life OS - personal life management">
+<link rel="manifest" href="manifest.webmanifest">
+<title>FARSHAD | Life OS</title>
+<style>
+:root{--bg:#0b0b0c;--panel:#151517;--panel2:#1c1c1f;--line:#303034;--gold:#d7b56d;--gold2:#f0d99d;--txt:#f5f2eb;--muted:#a5a19a;--red:#d97878;--green:#8ac7a0}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#302719 0,transparent 35%),var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.wrap{max-width:1100px;margin:auto;padding:18px 16px 90px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 20px;border-bottom:1px solid var(--line)}
+.brand{font-size:25px;letter-spacing:3px;font-weight:850;color:var(--gold)}.brand small{display:block;font-size:9px;letter-spacing:4px;color:var(--muted);font-weight:500}
+.pill{border:1px solid #5a4a2d;border-radius:999px;padding:7px 11px;color:var(--gold2);font-size:12px;background:#241e14}
+h1{font-size:26px;margin:22px 0 5px}h2{font-size:17px;margin:0 0 12px}p{color:var(--muted);line-height:1.7;margin:5px 0}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:16px}.card{background:linear-gradient(145deg,#19191c,#111113);border:1px solid var(--line);border-radius:17px;padding:16px;min-width:0;box-shadow:0 10px 30px #0003}
+.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-4{grid-column:span 4}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}.stat{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px}.stat b{display:block;font-size:22px;color:var(--gold2);margin-top:5px}.stat span{font-size:11px;color:var(--muted)}
+.nav{display:flex;gap:7px;overflow:auto;padding:13px 0;position:sticky;top:0;background:#0b0b0ceF;z-index:4;scrollbar-width:none}.nav button{white-space:nowrap;background:#19191c;border:1px solid var(--line);color:var(--muted);padding:9px 13px;border-radius:999px}.nav button.active{background:#352b19;border-color:#8b713d;color:var(--gold2)}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px}input,textarea,select{width:100%;background:#0d0d0f;color:var(--txt);border:1px solid #39393e;border-radius:11px;padding:11px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--gold)}textarea{min-height:95px;resize:vertical}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.btn{border:0;background:linear-gradient(135deg,#e5c77f,#a7833f);color:#17130b;font-weight:750;border-radius:11px;padding:11px 14px}.btn.secondary{background:#242427;color:var(--txt);border:1px solid var(--line)}.btn.danger{background:#492626;color:#ffdede}.btn.small{padding:7px 10px;font-size:12px}
+.list{display:grid;gap:8px;margin-top:12px}.item{display:flex;align-items:center;gap:10px;padding:11px;background:#1c1c1f;border:1px solid #303034;border-radius:12px}.item .body{flex:1;min-width:0}.item strong{display:block;overflow-wrap:anywhere}.item small{color:var(--muted)}.item.done strong{text-decoration:line-through;color:#8b8984}.check{accent-color:#c6a45e;width:18px;height:18px;flex:0 0 auto}
+.hidden{display:none!important}.muted{color:var(--muted)}.gold{color:var(--gold2)}.section{display:none}.section.active{display:block}.empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed #444;border-radius:12px;margin-top:10px}
+.progress{height:8px;background:#303034;border-radius:99px;overflow:hidden;margin-top:10px}.progress i{display:block;height:100%;background:linear-gradient(90deg,#98743b,#f0d99d);width:0}
+footer{text-align:center;color:#777;font-size:11px;margin-top:30px}
+#lock{position:fixed;inset:0;background:#09090af5;z-index:20;display:grid;place-items:center;padding:20px}#lock .card{width:min(420px,100%);padding:24px}.logo{font-size:32px;letter-spacing:5px;color:var(--gold);font-weight:900;text-align:center}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#29251b;border:1px solid #76613a;color:#ffe7ae;padding:11px 16px;border-radius:12px;z-index:30;display:none;max-width:90%;text-align:center}
+@media(max-width:700px){.span-8,.span-6,.span-4{grid-column:span 12}.stats{grid-template-columns:repeat(2,1fr)}h1{font-size:22px}.wrap{padding-inline:12px}}
+</style>
+</head>
+<body>
+<div id="lock">
+ <div class="card">
+  <div class="logo">FARSHAD.</div><p style="text-align:center">YOUR LIFE. YOUR RULES.</p>
+  <div id="setupBox" class="hidden">
+   <h2>ساخت رمز عبور</h2><p>برای محافظت از اطلاعاتت یک رمز بساز. این رمز را فراموش نکن؛ بازیابی آن بدون نسخه پشتیبان ممکن نیست.</p>
+   <label>رمز عبور جدید</label><input id="newPass" type="password" autocomplete="new-password" placeholder="حداقل ۸ کاراکتر">
+   <label>تکرار رمز</label><input id="newPass2" type="password" autocomplete="new-password">
+   <button class="btn" style="width:100%;margin-top:14px" id="createPass">ساخت فضای امن</button>
+  </div>
+  <div id="loginBox" class="hidden">
+   <h2>خوش برگشتی</h2><p>برای ورود رمز FARSHAD را وارد کن.</p>
+   <label>رمز عبور</label><input id="loginPass" type="password" autocomplete="current-password">
+   <button class="btn" style="width:100%;margin-top:14px" id="unlock">ورود امن</button>
+   <p id="loginError" style="color:var(--red)"></p>
+  </div>
+ </div>
+</div>
+<div class="wrap" id="app" style="display:none">
+<header><div class="brand">FARSHAD.<small>PERSONAL LIFE OS</small></div><button class="btn secondary small" id="lockBtn">قفل برنامه 🔒</button></header>
+<h1 id="greeting">سلام فرشاد 👋</h1><p id="dateLine">امروز، یک فرصت تازه است.</p>
+<div class="stats">
+ <div class="stat"><span>کارهای انجام‌شده</span><b id="doneCount">0</b></div>
+ <div class="stat"><span>کارهای باقی‌مانده</span><b id="leftCount">0</b></div>
+ <div class="stat"><span>یادداشت‌ها</span><b id="noteCount">0</b></div>
+ <div class="stat"><span>اهداف فعال</span><b id="goalCount">0</b></div>
+</div>
+<div class="nav" id="nav">
+ <button class="active" data-tab="home">خانه</button><button data-tab="routine">روتین روزانه</button><button data-tab="history">تاریخچه کارها</button><button data-tab="notes">دفترچه</button><button data-tab="goals">اهداف</button><button data-tab="finance">مالی</button><button data-tab="settings">تنظیمات</button>
+</div>
+<section class="section active" id="home">
+ <div class="grid">
+  <div class="card span-8"><h2>🎯 تمرکز امروز</h2><p>یک قدم کوچک و پیوسته، از برنامه‌های بزرگِ رهاشده بهتر است.</p><div class="progress"><i id="progressBar"></i></div><p id="progressText">۰٪ از کارهای امروز انجام شده</p></div>
+  <div class="card span-4"><h2>📅 تاریخ امروز</h2><strong class="gold" id="todayFull"></strong><p id="clock"></p></div>
+  <div class="card span-12"><h2>کارهای امروز</h2><div id="homeTasks" class="list"></div></div>
+ </div>
+</section>
+<section class="section" id="routine">
+ <div class="grid"><div class="card span-12"><h2>📋 دفترچه روتین روزانه</h2><p>کارهایت را اضافه کن و بعد از انجام، تیک بزن. وضعیت هر روز در تاریخچه ثبت می‌شود.</p>
+ <div class="row"><input id="taskInput" placeholder="مثلاً ۲۰ دقیقه آلمانی بخوانم"><button class="btn" id="addTask">افزودن کار</button></div><div id="taskList" class="list"></div></div></div>
+</section>
+<section class="section" id="history"><div class="card"><h2>🗂️ کارهایی که انجام دادی</h2><p>گزارش فعالیت‌های تکمیل‌شده بر اساس تاریخ.</p><div id="historyList" class="list"></div></div></section>
+<section class="section" id="notes"><div class="grid"><div class="card span-6"><h2>📔 دفترچه شخصی</h2><label>عنوان</label><input id="noteTitle" placeholder="عنوان یادداشت"><label>متن</label><textarea id="noteText" placeholder="هر چیزی که دوست داری ثبت کنی..."></textarea><button class="btn" id="saveNote" style="margin-top:10px">ذخیره یادداشت</button></div><div class="card span-6"><h2>یادداشت‌های من</h2><div id="noteList" class="list"></div></div></div></section>
+<section class="section" id="goals"><div class="grid"><div class="card span-6"><h2>🏁 هدف تازه</h2><label>عنوان هدف</label><input id="goalTitle" placeholder="مثلاً رسیدن به سطح A2 آلمانی"><label>تاریخ هدف (اختیاری)</label><input id="goalDate" type="date"><button class="btn" id="addGoal" style="margin-top:10px">ثبت هدف</button></div><div class="card span-6"><h2>اهداف من</h2><div id="goalList" class="list"></div></div></div></section>
+<section class="section" id="finance"><div class="grid"><div class="card span-6"><h2>💰 ثبت تراکنش</h2><label>شرح</label><input id="finTitle" placeholder="مثلاً خرید روزانه"><label>مبلغ</label><input id="finAmount" type="number" min="0" placeholder="مبلغ"><label>نوع</label><select id="finType"><option value="income">درآمد</option><option value="expense">هزینه</option></select><button class="btn" id="addFin" style="margin-top:10px">ثبت تراکنش</button></div><div class="card span-6"><h2>خلاصه مالی</h2><p>درآمد: <b class="gold" id="incomeTotal">۰</b></p><p>هزینه: <b class="gold" id="expenseTotal">۰</b></p><p>مانده: <b class="gold" id="balanceTotal">۰</b></p><div id="financeList" class="list"></div></div></div></section>
+<section class="section" id="settings"><div class="grid">
+ <div class="card span-6"><h2>🌍 زبان برنامه</h2><p>انتخاب زبان رابط کاربری. در این نسخه فارسی فعال است؛ زبان‌های دیگر به‌تدریج به ترجمه کامل مجهز می‌شوند.</p><select id="language"><option value="fa">فارسی</option><option value="en">English (در حال آماده‌سازی)</option><option value="de">Deutsch (در حال آماده‌سازی)</option><option value="ar">العربية (در حال آماده‌سازی)</option><option value="fr">Français (در حال آماده‌سازی)</option><option value="es">Español (در حال آماده‌سازی)</option><option value="tr">Türkçe (در حال آماده‌سازی)</option><option value="ru">Русский (در حال آماده‌سازی)</option><option value="zh">中文 (در حال آماده‌سازی)</option><option value="ja">日本語 (در حال آماده‌سازی)</option><option value="hi">हिन्दी (در حال آماده‌سازی)</option></select><p id="langMsg"></p></div>
+ <div class="card span-6"><h2>🗄️ محل ذخیره‌سازی</h2><p>انتخاب با توست. اطلاعات اصلی در فضای امن همین دستگاه نگهداری می‌شود. برای فضای ابری، نسخه پشتیبان رمزگذاری‌شده را در Drive یا فضای دلخواه ذخیره کن.</p><select id="storageMode"><option value="local">فقط حافظه گوشی</option><option value="both">گوشی + نسخه پشتیبان ابری دستی</option></select><p id="storageMsg"></p></div>
+ <div class="card span-12"><h2>🔐 امنیت و پشتیبان‌گیری</h2><p>خروجی پشتیبان رمزگذاری‌شده است و برای بازیابی به رمز FARSHAD نیاز دارد.</p><div class="row"><button class="btn" id="exportBtn">تهیه نسخه پشتیبان</button><button class="btn secondary" id="importBtn">بازیابی نسخه پشتیبان</button><input type="file" id="importFile" accept=".farshad,.json,application/json" class="hidden"></div><p id="backupInfo"></p><label>تغییر رمز عبور</label><input id="oldPass" type="password" placeholder="رمز فعلی"><input id="changePass" type="password" placeholder="رمز جدید، حداقل ۸ کاراکتر" style="margin-top:7px"><button class="btn secondary" id="changePassBtn" style="margin-top:8px">تغییر رمز</button></div>
+ </div></section>
+<footer>FARSHAD Life OS • نسخه اولیه ۱.۰ • اطلاعاتت متعلق به خودت است.</footer>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+const $=id=>document.getElementById(id), DB='farshad_life_os', STORE='vault', KEY='main';
+let db, masterKey=null, salt=null, state={tasks:[],notes:[],goals:[],finance:[],settings:{storage:'both',language:'fa'}};
+const today=()=>new Date().toISOString().slice(0,10);
+const faNum=n=>new Intl.NumberFormat('fa-IR').format(n);
+function toast(s){$('toast').textContent=s;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2600)}
+function openDB(){return new Promise((res,rej)=>{let r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore(STORE);r.onsuccess=()=>{db=r.result;res()};r.onerror=()=>rej(r.error)})}
+function req(mode,fn){return new Promise((res,rej)=>{let tx=db.transaction(STORE,mode),s=tx.objectStore(STORE),r=fn(s);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function derive(password,s){let base=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:s,iterations:250000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function encrypt(obj,key=masterKey){let iv=crypto.getRandomValues(new Uint8Array(12)),data=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(JSON.stringify(obj)));return {iv:[...iv],data:[...new Uint8Array(data)]}}
+async function decrypt(pack,key=masterKey){let raw=await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(pack.iv)},key,new Uint8Array(pack.data));return JSON.parse(new TextDecoder().decode(raw))}
+async function save(){await req('readwrite',s=>s.put(awaitableEncrypt(),KEY))}
+function awaitableEncrypt(){return encrypt(state)}
+async function loadPack(){return req('readonly',s=>s.get(KEY))}
+function showSetup(){ $('setupBox').classList.remove('hidden');$('loginBox').classList.add('hidden')}
+function showLogin(){ $('loginBox').classList.remove('hidden');$('setupBox').classList.add('hidden')}
+async function init(){await openDB();let pack=await loadPack();if(pack){salt=new Uint8Array(pack.salt);showLogin()}else showSetup()}
+$('createPass').onclick=async()=>{let p=$('newPass').value;if(p.length<8)return toast('رمز باید حداقل ۸ کاراکتر باشد.');if(p!==$('newPass2').value)return toast('تکرار رمز با رمز اصلی یکسان نیست.');salt=crypto.getRandomValues(new Uint8Array(16));masterKey=await derive(p,salt);let firstVault=await encrypt(state);await req('readwrite',s=>s.put({salt:[...salt],vault:firstVault},KEY));$('lock').style.display='none';$('app').style.display='block';render();toast('فضای امن ساخته شد')};
+$('unlock').onclick=async()=>{try{let p=$('loginPass').value,pack=await loadPack();salt=new Uint8Array(pack.salt);masterKey=await derive(p,salt);state=await decrypt(pack.vault);$('lock').style.display='none';$('app').style.display='block';render()}catch(e){$('loginError').textContent='رمز اشتباه است یا اطلاعات آسیب دیده‌اند.'}};
+async function persist(){let vault=await encrypt(state);await req('readwrite',s=>s.put({salt:[...salt],vault},KEY));render()}
+function addTask(){let v=$('taskInput').value.trim();if(!v)return;state.tasks.push({id:crypto.randomUUID(),text:v,date:today(),done:false,doneAt:null});$('taskInput').value='';persist()}
+$('addTask').onclick=addTask;$('taskInput').addEventListener('keydown',e=>{if(e.key==='Enter')addTask()});
+function taskHtml(t){return `<div class="item ${t.done?'done':''}"><input class="check" type="checkbox" ${t.done?'checked':''} data-task="${t.id}"><div class="body"><strong>${esc(t.text)}</strong><small>${t.date}${t.done?' • انجام شد':''}</small></div><button class="btn danger small" data-del-task="${t.id}">حذف</button></div>`}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function bindLists(){document.querySelectorAll('[data-task]').forEach(x=>x.onchange=()=>{let t=state.tasks.find(t=>t.id===x.dataset.task);t.done=x.checked;t.doneAt=x.checked?new Date().toISOString():null;persist()});document.querySelectorAll('[data-del-task]').forEach(x=>x.onclick=()=>{state.tasks=state.tasks.filter(t=>t.id!==x.dataset.delTask);persist()});document.querySelectorAll('[data-del-note]').forEach(x=>x.onclick=()=>{state.notes=state.notes.filter(n=>n.id!==x.dataset.delNote);persist()});document.querySelectorAll('[data-del-goal]').forEach(x=>x.onclick=()=>{state.goals=state.goals.filter(n=>n.id!==x.dataset.delGoal);persist()});document.querySelectorAll('[data-del-fin]').forEach(x=>x.onclick=()=>{state.finance=state.finance.filter(n=>n.id!==x.dataset.delFin);persist()})}
+$('saveNote').onclick=()=>{let title=$('noteTitle').value.trim(),body=$('noteText').value.trim();if(!title&&!body)return toast('چیزی برای ذخیره بنویس.');state.notes.unshift({id:crypto.randomUUID(),title,body,date:new Date().toLocaleString('fa-IR')});$('noteTitle').value='';$('noteText').value='';persist();toast('یادداشت ذخیره شد')};
+$('addGoal').onclick=()=>{let title=$('goalTitle').value.trim();if(!title)return;state.goals.push({id:crypto.randomUUID(),title,date:$('goalDate').value,done:false});$('goalTitle').value='';$('goalDate').value='';persist()};
+$('addFin').onclick=()=>{let title=$('finTitle').value.trim(),amount=Number($('finAmount').value);if(!title||!amount||amount<0)return toast('شرح و مبلغ معتبر وارد کن.');state.finance.unshift({id:crypto.randomUUID(),title,amount,type:$('finType').value,date:today()});$('finTitle').value='';$('finAmount').value='';persist()};
+function render(){let todays=state.tasks.filter(t=>t.date===today()),done=todays.filter(t=>t.done).length,left=todays.length-done,pct=todays.length?Math.round(done/todays.length*100):0;
+$('doneCount').textContent=faNum(done);$('leftCount').textContent=faNum(left);$('noteCount').textContent=faNum(state.notes.length);$('goalCount').textContent=faNum(state.goals.filter(g=>!g.done).length);$('progressBar').style.width=pct+'%';$('progressText').textContent=faNum(pct)+'٪ از کارهای امروز انجام شده';$('todayFull').textContent=new Date().toLocaleDateString('fa-IR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});$('dateLine').textContent='امروز را آگاهانه بساز.';$('clock').textContent=new Date().toLocaleTimeString('fa-IR');
+$('taskList').innerHTML=state.tasks.filter(t=>t.date===today()).map(taskHtml).join('')||'<div class="empty">هنوز کاری برای امروز ثبت نکردی.</div>';$('homeTasks').innerHTML=todays.slice(0,6).map(taskHtml).join('')||'<div class="empty">برای شروع، یک کار کوچک اضافه کن.</div>';
+$('historyList').innerHTML=state.tasks.filter(t=>t.done).sort((a,b)=>(b.doneAt||'').localeCompare(a.doneAt||'')).map(t=>`<div class="item"><div class="body"><strong>${esc(t.text)}</strong><small>${t.date} • ${t.doneAt?new Date(t.doneAt).toLocaleString('fa-IR'):''}</small></div></div>`).join('')||'<div class="empty">هنوز فعالیت تکمیل‌شده‌ای ثبت نشده.</div>';
+$('noteList').innerHTML=state.notes.map(n=>`<div class="item"><div class="body"><strong>${esc(n.title||'بدون عنوان')}</strong><small>${esc(n.date)}</small><p>${esc(n.body)}</p></div><button class="btn danger small" data-del-note="${n.id}">حذف</button></div>`).join('')||'<div class="empty">دفترچه‌ات هنوز خالی است.</div>';
+$('goalList').innerHTML=state.goals.map(g=>`<div class="item"><input type="checkbox" class="check" data-goal="${g.id}" ${g.done?'checked':''}><div class="body"><strong>${esc(g.title)}</strong><small>${g.date||'بدون مهلت'}</small></div><button class="btn danger small" data-del-goal="${g.id}">حذف</button></div>`).join('')||'<div class="empty">هدفی ثبت نشده.</div>';
+let inc=state.finance.filter(f=>f.type==='income').reduce((a,b)=>a+b.amount,0),exp=state.finance.filter(f=>f.type==='expense').reduce((a,b)=>a+b.amount,0);$('incomeTotal').textContent=faNum(inc);$('expenseTotal').textContent=faNum(exp);$('balanceTotal').textContent=faNum(inc-exp);
+$('financeList').innerHTML=state.finance.map(f=>`<div class="item"><div class="body"><strong>${esc(f.title)}</strong><small>${f.date} • ${f.type==='income'?'درآمد':'هزینه'}</small></div><b class="${f.type==='income'?'gold':''}">${faNum(f.amount)}</b><button class="btn danger small" data-del-fin="${f.id}">×</button></div>`).join('');
+$('storageMode').value=state.settings?.storage||'both';$('language').value=state.settings?.language||'fa';bindLists();
+document.querySelectorAll('[data-goal]').forEach(x=>x.onchange=()=>{let g=state.goals.find(g=>g.id===x.dataset.goal);g.done=x.checked;persist()});
+}
+$('nav').onclick=e=>{let b=e.target.closest('button[data-tab]');if(!b)return;document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.section').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))};
+$('storageMode').onchange=()=>{state.settings.storage=$('storageMode').value;persist();$('storageMsg').textContent=state.settings.storage==='both'?'حافظه گوشی فعال است؛ فایل پشتیبان رمزگذاری‌شده را هر زمان خواستی در فضای ابری ذخیره کن.':'اطلاعات فقط روی همین دستگاه نگهداری می‌شود.'};
+$('language').onchange=()=>{state.settings.language=$('language').value;persist();$('langMsg').textContent=$('language').value==='fa'?'زبان فارسی فعال است.':'این زبان در فهرست انتخاب قرار دارد و ترجمه کامل آن در نسخه بعدی اضافه می‌شود.'};
+$('exportBtn').onclick=async()=>{let pack=await loadPack(),blob=new Blob([JSON.stringify({app:'FARSHAD',version:1,created:new Date().toISOString(),...pack})],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='FARSHAD-backup.farshad';a.click();URL.revokeObjectURL(url);$('backupInfo').textContent='نسخه پشتیبان رمزگذاری‌شده ساخته شد. آن را در فضای ابری دلخواه ذخیره کن.'};
+$('importBtn').onclick=()=>$('importFile').click();
+$('importFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let obj=JSON.parse(await f.text());if(obj.app!=='FARSHAD'||!obj.vault||!obj.salt)throw Error();let p=prompt('برای بازیابی، رمز نسخه پشتیبان را وارد کن:');let k=await derive(p,new Uint8Array(obj.salt));let restored=await decrypt(obj.vault,k);if(!confirm('اطلاعات فعلی با نسخه پشتیبان جایگزین شود؟'))return;state=restored;salt=new Uint8Array(obj.salt);masterKey=k;await req('readwrite',s=>s.put({salt:obj.salt,vault:obj.vault},KEY));render();toast('اطلاعات بازیابی شد')}catch(err){toast('فایل یا رمز پشتیبان معتبر نیست.')}e.target.value=''};
+$('changePassBtn').onclick=async()=>{let old=$('oldPass').value,nw=$('changePass').value;if(nw.length<8)return toast('رمز جدید حداقل ۸ کاراکتر باشد.');try{let pack=await loadPack(),k=await derive(old,new Uint8Array(pack.salt)),plain=await decrypt(pack.vault,k),ns=crypto.getRandomValues(new Uint8Array(16)),nk=await derive(nw,ns),nv=await encrypt(plain,nk);salt=ns;masterKey=nk;await req('readwrite',s=>s.put({salt:[...ns],vault:nv},KEY));$('oldPass').value='';$('changePass').value='';toast('رمز عبور تغییر کرد')}catch(e){toast('رمز فعلی اشتباه است.')}};
+$('lockBtn').onclick=()=>{masterKey=null;$('app').style.display='none';$('lock').style.display='grid';$('loginPass').value='';showLogin()};
+setInterval(()=>{if($('app').style.display!=='none')$('clock').textContent=new Date().toLocaleTimeString('fa-IR')},1000);
+init().catch(e=>{alert('مرورگر از ذخیره‌سازی امن پشتیبانی نمی‌کند یا باید برنامه را از HTTPS اجرا کنی.')});
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
